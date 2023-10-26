@@ -75,7 +75,7 @@ public class CollectionUtil {
      */
     public static <T> void partition(Collection<T> main, int size, Consumer<Collection<T>> consumer) {
         if (size <= 0) {
-            throw new IllegalStateException("size should gt 0");
+            throw new IllegalArgumentException("size should gt 0");
         }
         List<T> batch = new ArrayList<>(size);
         for (T t : main) {
