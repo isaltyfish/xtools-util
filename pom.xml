@@ -6,7 +6,7 @@
 
     <groupId>net.verytools.util</groupId>
     <artifactId>xtools-util</artifactId>
-    <version>0.0.2</version>
+    <version>0.0.3</version>
     <name>xtools-util</name>
     <description>java utils</description>
     <url>https://github.com/isaltyfish/xtools-util</url>
