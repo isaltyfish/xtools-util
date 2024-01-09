@@ -1,5 +1,7 @@
 package net.verytools.util;
 
+import net.verytools.util.model.DiffR;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -12,7 +14,7 @@ import java.util.stream.Collectors;
 public class CollectionUtil {
 
     /**
-     * Join two collections which have one to one relationship.
+     * Join two collections which have one-to-one relationship.
      *
      * @param main          the first collection
      * @param sub           the second collection to be joined with first collection
@@ -37,7 +39,7 @@ public class CollectionUtil {
     }
 
     /**
-     * Join two collections which have one to many relationship.
+     * Join two collections which have one-to-many relationship.
      *
      * @param main          the first collection
      * @param sub           the second collection to be joined with first collection
@@ -63,6 +65,32 @@ public class CollectionUtil {
 
     public static <T, V> List<V> map(Collection<T> main, Function<? super T, V> mapper) {
         return main.stream().map(mapper).collect(Collectors.toList());
+    }
+
+    public static <T, E, R> DiffR<T, E> diff(List<T> lst1, List<E> lst2, Function<T, R> f1, Function<E, R> f2) {
+        List<T> newList = new ArrayList<>();
+        List<T> modList = new ArrayList<>();
+        List<E> delList = new ArrayList<>();
+        for (T t : lst1) {
+            if (f1.apply(t) == null) {
+                newList.add(t);
+            }
+        }
+        Map<R, E> lst2Map = lst2.stream().collect(Collectors.toMap(f2, e -> e, (a, b) -> b));
+        for (T t : lst1) {
+            R k1 = f1.apply(t);
+            if (k1 != null && lst2Map.containsKey(k1)) {
+                modList.add(t);
+            }
+        }
+        Map<R, T> lst1Map = lst1.stream().collect(Collectors.toMap(f1, e -> e, (a, b) -> b));
+        for (E t : lst2) {
+            R k2 = f2.apply(t);
+            if (k2 != null && !lst1Map.containsKey(k2)) {
+                delList.add(t);
+            }
+        }
+        return new DiffR<>(newList, modList, delList);
     }
 
     /**
